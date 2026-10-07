@@ -7,223 +7,43 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
-    body {
-      background: #f1f3f4;
-      overflow: hidden;
-      color: #202124;
-    }
+    body { background: #f1f3f4; overflow: hidden; color: #202124; }
 
-    #loginPage {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
+    #loginPage { position: fixed; inset: 0; background: #000; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+    .login-box { width: min(92vw, 820px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }
+    .login-box h1 { color: #fff; font-size: clamp(18px, 2.2vw, 34px); font-weight: 800; letter-spacing: 1px; text-transform: uppercase; line-height: 1.2; }
+    .brand-logo-wrap { width: min(42vw, 420px); max-width: 420px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 0 12px rgba(81,191,255,.25)); }
+    .brand-logo { width: 100%; height: auto; display: block; border-radius: 18px; object-fit: contain; background: transparent; }
 
-    .login-box {
-      width: min(92vw, 820px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      text-align: center;
-    }
-
-    .login-box h1 {
-      color: #fff;
-      font-size: clamp(18px, 2.2vw, 34px);
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    .brand-logo-wrap {
-      width: min(42vw, 420px);
-      max-width: 420px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      filter: drop-shadow(0 0 12px rgba(81, 191, 255, 0.25));
-    }
-
-    .brand-logo {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 18px;
-      object-fit: contain;
-      background: transparent;
-    }
-
-    .login-form {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 18px;
-      padding: 24px 22px;
-      width: min(90vw, 420px);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      backdrop-filter: blur(2px);
-    }
-
-    .login-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      text-align: left;
-    }
-
-    .login-field label {
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-    }
-
-    .login-field input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.08);
-      color: white;
-      font-size: 15px;
-      outline: none;
-    }
-
-    .login-field input::placeholder {
-      color: rgba(255,255,255,0.7);
-    }
-
-    .login-button {
-      margin-top: 6px;
-      border: none;
-      background: linear-gradient(135deg, #1a73e8, #3a9af4);
-      color: white;
-      font-weight: 700;
-      border-radius: 10px;
-      padding: 12px 18px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 10px 20px rgba(26,115,232,0.25);
-    }
-
+    .login-form { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 18px; padding: 24px 22px; width: min(90vw, 420px); display: flex; flex-direction: column; gap: 14px; backdrop-filter: blur(2px); }
+    .login-field { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .login-field label { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.4px; }
+    .login-field input { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.08); color: white; font-size: 15px; outline: none; }
+    .login-field input::placeholder { color: rgba(255,255,255,0.7); }
+    .login-button { margin-top: 6px; border: none; background: linear-gradient(135deg, #1a73e8, #3a9af4); color: white; font-weight: 700; border-radius: 10px; padding: 12px 18px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 10px 20px rgba(26,115,232,0.25); }
     .login-button:hover { transform: translateY(-1px); }
+    .error-message { display: none; background: rgba(217,48,37,0.15); border: 1px solid rgba(217,48,37,0.6); border-radius: 10px; color: #ffc9c9; padding: 10px 12px; font-size: 13px; text-align: center; }
 
-    .error-message {
-      display: none;
-      background: rgba(217,48,37,0.15);
-      border: 1px solid rgba(217,48,37,0.6);
-      border-radius: 10px;
-      color: #ffc9c9;
-      padding: 10px 12px;
-      font-size: 13px;
-      text-align: center;
-    }
-
-    #dashboard {
-      display: none;
-      flex-direction: column;
-      width: 100vw;
-      height: 100vh;
-      background: #f1f3f4;
-      padding: 30px;
-      overflow: auto;
-    }
-
-    .dashboard-header {
-      background: white;
-      padding: 24px 28px;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
+    #dashboard { display: none; flex-direction: column; width: 100vw; height: 100vh; background: #f1f3f4; padding: 30px; overflow: auto; }
+    .dashboard-header { background: white; padding: 24px 28px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
     .dashboard-header h1 { color: #174ea6; margin-bottom: 6px; }
     .dashboard-header p { color: #666; font-size: 14px; }
-
-    #openMapBtn {
-      background: #1a73e8;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
+    #openMapBtn { background: #1a73e8; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
     #openMapBtn:hover { background: #1557b0; }
 
-    .dashboard-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 25px;
-    }
-
-    .dashboard-card {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dashboard-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      background: linear-gradient(180deg, #1a73e8, #4285f4);
-    }
-
+    .dashboard-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 25px; }
+    .dashboard-card { background: white; padding: 22px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
+    .dashboard-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: linear-gradient(180deg, #1a73e8, #4285f4); }
     .card-icon { font-size: 28px; flex-shrink: 0; }
     .dashboard-card h3 { font-size: 14px; color: #666; margin-bottom: 6px; }
     .dashboard-card strong { font-size: 28px; color: #202124; }
     .card-status { font-size: 11px; color: #999; margin-top: 4px; }
 
-    .dashboard-content {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 25px;
-    }
-
-    .dashboard-panel {
-      background: white;
-      padding: 24px;
-      border-radius: 14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    }
-
-    .dashboard-panel h2 {
-      color: #202124;
-      font-size: 18px;
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    .dashboard-content { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; margin-bottom: 25px; }
+    .dashboard-panel { background: white; padding: 24px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+    .dashboard-panel h2 { color: #202124; font-size: 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
     .traffic-overview { display: flex; flex-direction: column; gap: 15px; }
     .overview-row { display: flex; justify-content: space-between; padding: 12px; background: #f8f9fa; border-radius: 8px; }
-
     .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; }
     .status-green { background: #d4edda; color: #155724; }
     .status-amber { background: #fff3cd; color: #856404; }
@@ -238,10 +58,7 @@
     .stat-value { font-size: 22px; font-weight: bold; color: #1a73e8; margin-bottom: 4px; }
     .stat-label { font-size: 12px; color: #666; }
 
-    .pulse-indicator {
-      display: inline-block;
-      width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; margin-right: 6px;
-    }
+    .pulse-indicator { display: inline-block; width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; margin-right: 6px; }
     .pulse-green { background: #188038; animation: pulse-green 2s infinite; }
     .pulse-amber { background: #f9ab00; animation: pulse-amber 2s infinite; }
     .pulse-red { background: #d93025; animation: pulse-red 2s infinite; }
@@ -254,10 +71,8 @@
     #map { position: absolute; inset: 0; z-index: 1; }
     .leaflet-control-attribution { font-size: 9px; }
 
-    .search-panel { position: absolute; top: 18px; left: 18px; z-index: 1000; width: 390px; }
-    .search-box {
-      background: white; border-radius: 28px; height: 58px; display: flex; align-items: center; padding: 0 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-    }
+    .search-panel { position: absolute; top: 18px; left: 18px; z-index: 1000; width: 390px; max-height: 85vh; overflow-y: auto; }
+    .search-box { background: white; border-radius: 28px; height: 58px; display: flex; align-items: center; padding: 0 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
     .search-icon { font-size: 22px; color: #5f6368; margin-right: 12px; }
     .search-title { font-size: 16px; color: #202124; font-weight: 500; }
 
@@ -282,24 +97,27 @@
     .traffic-status { display: flex; align-items: center; gap: 8px; font-weight: bold; }
     .traffic-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
 
-    .traffic-panel {
-      position: absolute; right: 18px; bottom: 20px; z-index: 1000; background: white; border-radius: 12px; padding: 13px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.22);
-    }
+    .alternatives-container { margin-top: 12px; padding: 12px; background: #f0f7ff; border-radius: 10px; border-left: 3px solid #1a73e8; }
+    .alternatives-title { font-size: 12px; font-weight: 700; color: #1a73e8; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .alternative-route { background: white; padding: 10px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; border: 2px solid #e0e0e0; transition: all 0.2s ease; font-size: 12px; }
+    .alternative-route:hover { border-color: #1a73e8; background: #f8fbff; }
+    .alternative-route.selected { background: #e8f0fe; border-color: #1a73e8; box-shadow: 0 2px 6px rgba(26,115,232,0.2); }
+    .alt-route-info { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+    .alt-route-details { flex: 1; }
+    .alt-route-status { color: #1a73e8; font-weight: 700; margin-bottom: 2px; }
+    .alt-route-time { color: #999; font-size: 11px; }
+
+    .traffic-panel { position: absolute; right: 18px; bottom: 20px; z-index: 1000; background: white; border-radius: 12px; padding: 13px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.22); }
     .traffic-panel h3 { font-size: 14px; margin-bottom: 10px; }
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 6px 0; }
     .legend-color { width: 12px; height: 12px; border-radius: 50%; }
 
-    #refreshBtn {
-      position: absolute; right: 18px; top: 18px; z-index: 1000; width: 45px; height: 45px; border: none; border-radius: 50%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.25); font-size: 20px; cursor: pointer;
-    }
+    #refreshBtn { position: absolute; right: 18px; top: 18px; z-index: 1000; width: 45px; height: 45px; border: none; border-radius: 50%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.25); font-size: 20px; cursor: pointer; }
     #refreshBtn:hover { background: #f1f3f4; }
     #refreshBtn.updating { animation: spin 1s linear infinite; }
     @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    #trafficList {
-      position: absolute; right: 18px; top: 75px; z-index: 1000; width: 280px; max-height: 450px; overflow-y: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.22);
-    }
-
+    #trafficList { position: absolute; right: 18px; top: 75px; z-index: 1000; width: 280px; max-height: 450px; overflow-y: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.22); }
     .road-card { padding: 14px; border-bottom: 1px solid #eee; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
     .road-card:hover { background: #f8f9fa; }
     .road-info { flex: 1; min-width: 0; }
@@ -312,27 +130,9 @@
     .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important; }
     .leaflet-control-zoom a { border: none !important; }
 
-    @media (max-width: 800px) {
-      #dashboard { padding: 15px; }
-      .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-      #openMapBtn { width: 100%; }
-      .dashboard-cards { grid-template-columns: 1fr 1fr; }
-      .dashboard-content { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 700px) {
-      .search-panel { left: 10px; right: 10px; width: auto; top: 10px; }
-      .traffic-panel { right: 10px; bottom: 10px; }
-      #trafficList { display: none; }
-      #refreshBtn { top: 72px; right: 10px; }
-    }
-
-    @media (max-width: 500px) {
-      .dashboard-cards { grid-template-columns: 1fr; }
-      .login-box { width: calc(100% - 30px); }
-      .dashboard-content { grid-template-columns: 1fr; }
-      .brand-logo-wrap { width: min(70vw, 300px); max-width: 300px; }
-    }
+    @media (max-width: 800px) { #dashboard { padding: 15px; } .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; } #openMapBtn { width: 100%; } .dashboard-cards { grid-template-columns: 1fr 1fr; } .dashboard-content { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .search-panel { left: 10px; right: 10px; width: auto; top: 10px; } .traffic-panel { right: 10px; bottom: 10px; } #trafficList { display: none; } #refreshBtn { top: 72px; right: 10px; } }
+    @media (max-width: 500px) { .dashboard-cards { grid-template-columns: 1fr; } .login-box { width: calc(100% - 30px); } .dashboard-content { grid-template-columns: 1fr; } .brand-logo-wrap { width: min(70vw, 300px); max-width: 300px; } }
   </style>
 </head>
 <body>
@@ -411,51 +211,25 @@
       <div class="dashboard-panel">
         <h2>📊 Live Traffic Overview</h2>
         <div class="traffic-overview">
-          <div class="overview-row">
-            <span>Average City Speed</span>
-            <span id="avgSpeed" style="font-size:18px;font-weight:bold;color:#1a73e8">-- km/h</span>
-          </div>
-          <div class="overview-row">
-            <span>Roads with Congestion</span>
-            <span id="congestedRoads" style="font-size:18px;font-weight:bold;color:#d93025">0</span>
-          </div>
-          <div class="overview-row">
-            <span>System Status</span>
-            <span style="color:#188038;font-weight:bold">● Online</span>
-          </div>
-          <div class="overview-row">
-            <span>Last Updated</span>
-            <span id="lastUpdate" style="font-size:12px;color:#999">Just now</span>
-          </div>
+          <div class="overview-row"><span>Average City Speed</span><span id="avgSpeed" style="font-size:18px;font-weight:bold;color:#1a73e8">-- km/h</span></div>
+          <div class="overview-row"><span>Roads with Congestion</span><span id="congestedRoads" style="font-size:18px;font-weight:bold;color:#d93025">0</span></div>
+          <div class="overview-row"><span>System Status</span><span style="color:#188038;font-weight:bold">● Online</span></div>
+          <div class="overview-row"><span>Last Updated</span><span id="lastUpdate" style="font-size:12px;color:#999">Just now</span></div>
         </div>
       </div>
 
       <div class="dashboard-panel">
         <h2>⚠️ Live Alerts</h2>
-        <div class="real-time-alerts" id="alertsPanel">
-          <div style="text-align:center;color:#999;padding:20px">No active alerts</div>
-        </div>
+        <div class="real-time-alerts" id="alertsPanel"><div style="text-align:center;color:#999;padding:20px">No active alerts</div></div>
       </div>
 
       <div class="dashboard-panel">
         <h2>📈 Analytics</h2>
         <div class="analytics-grid">
-          <div class="stat-item">
-            <div class="stat-value" id="peakHoursData">2-4 PM</div>
-            <div class="stat-label">Peak Hours</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value" id="congestionLevel">34%</div>
-            <div class="stat-label">Congestion Level</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value" id="avgWaitTime">12 min</div>
-            <div class="stat-label">Avg Wait Time</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value" id="incidentsCount">0</div>
-            <div class="stat-label">Active Incidents</div>
-          </div>
+          <div class="stat-item"><div class="stat-value" id="peakHoursData">2-4 PM</div><div class="stat-label">Peak Hours</div></div>
+          <div class="stat-item"><div class="stat-value" id="congestionLevel">34%</div><div class="stat-label">Congestion Level</div></div>
+          <div class="stat-item"><div class="stat-value" id="avgWaitTime">12 min</div><div class="stat-label">Avg Wait Time</div></div>
+          <div class="stat-item"><div class="stat-value" id="incidentsCount">0</div><div class="stat-label">Active Incidents</div></div>
         </div>
       </div>
     </div>
@@ -518,11 +292,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
-    const users = {
-      aeronn: { name: 'Administrator' },
-      angel: { name: 'Administrator' },
-      lance: { name: 'Administrator' }
-    };
+    const users = { aeronn: { name: 'Administrator' }, angel: { name: 'Administrator' }, lance: { name: 'Administrator' } };
 
     function login() {
       const username = document.getElementById('username').value.trim();
@@ -554,11 +324,11 @@
       { name: 'Holy Spirit Drive', point: [14.6870, 121.0735], status: 'green', speed: 35 },
       { name: 'Bagong Silangan Road', point: [14.6755, 121.0980], status: 'amber', speed: 24 }
     ];
-
     const colors = { green: '#188038', amber: '#f9ab00', red: '#d93025' };
     const labels = { green: 'Free flow', amber: 'Moderate', red: 'Heavy traffic' };
 
     let trafficMap, roadMarkers = [], startMarker = null, destinationMarker = null, routeLine = null, updateInterval = null;
+    let alternativeRoutes = [], selectedRouteIndex = 0, alternativeLines = [];
 
     function updateLiveTraffic() {
       roads.forEach((road) => {
@@ -660,15 +430,9 @@
         card.innerHTML = `
           <div class="road-info">
             <div class="road-name">${road.name}</div>
-            <div class="road-meta">
-              <span>${labels[road.status]}</span>
-              ${road.incident ? `<span style="color:#d93025">⚠️ ${road.incident}</span>` : ''}
-            </div>
+            <div class="road-meta"><span>${labels[road.status]}</span>${road.incident ? `<span style="color:#d93025">⚠️ ${road.incident}</span>` : ''}</div>
           </div>
-          <div class="road-speed">
-            <div class="speed-value" style="color:${colors[road.status]}">${road.speed.toFixed(0)}</div>
-            <div class="speed-unit">km/h</div>
-          </div>
+          <div class="road-speed"><div class="speed-value" style="color:${colors[road.status]}">${road.speed.toFixed(0)}</div><div class="speed-unit">km/h</div></div>
         `;
 
         card.addEventListener('click', () => {
@@ -714,7 +478,63 @@
       if (startMarker) trafficMap.removeLayer(startMarker);
       if (destinationMarker) trafficMap.removeLayer(destinationMarker);
       if (routeLine) trafficMap.removeLayer(routeLine);
+      alternativeLines.forEach((line) => {
+        if (trafficMap && trafficMap.hasLayer(line)) trafficMap.removeLayer(line);
+      });
       startMarker = destinationMarker = routeLine = null;
+      alternativeRoutes = [];
+      alternativeLines = [];
+      selectedRouteIndex = 0;
+    }
+
+    function selectRoute(index) {
+      selectedRouteIndex = index;
+      const route = alternativeRoutes[index];
+      if (!route || !trafficMap) return;
+
+      alternativeLines.forEach((line) => {
+        if (trafficMap.hasLayer(line)) trafficMap.removeLayer(line);
+      });
+      alternativeLines = [];
+
+      if (routeLine) trafficMap.removeLayer(routeLine);
+
+      routeLine = L.geoJSON(route.geometry, { style: { color: '#1a73e8', weight: 7, opacity: 0.9 } }).addTo(trafficMap);
+
+      alternativeRoutes.forEach((alt, idx) => {
+        if (idx !== index) {
+          const altLine = L.geoJSON(alt.geometry, { style: { color: '#cccccc', weight: 3, opacity: 0.4, dashArray: '5, 5' } }).addTo(trafficMap);
+          alternativeLines.push(altLine);
+        }
+      });
+
+      trafficMap.fitBounds(routeLine.getBounds(), { padding: [40, 40], maxZoom: 15 });
+
+      const destination = coords('destination');
+      const destRoad = getDestinationTraffic(destination);
+      document.getElementById('routeSummary').innerHTML = `
+        <strong>${selectedName('origin')} → ${selectedName('destination')}</strong>
+        <div style="margin-top:7px;font-size:14px"><strong>Route ${index + 1}</strong> • ${(route.distance / 1000).toFixed(1)} km • about ${(route.duration / 60).toFixed(0)} min</div>
+        <div class="destination-traffic">
+          <div class="traffic-status">
+            <span class="traffic-dot" style="background:${colors[destRoad.status]};"></span>
+            ${labels[destRoad.status]} route
+          </div>
+        </div>
+        <div class="alternatives-container">
+          <div class="alternatives-title">🛣️ Alternative Routes</div>
+          ${alternativeRoutes.map((alt, idx) => `
+            <div class="alternative-route ${idx === selectedRouteIndex ? 'selected' : ''}" onclick="selectRoute(${idx})">
+              <div class="alt-route-info">
+                <div class="alt-route-details">
+                  <div class="alt-route-status">Route ${idx + 1} • ${(alt.distance / 1000).toFixed(1)} km</div>
+                  <div class="alt-route-time">~${(alt.duration / 60).toFixed(0)} min • ${alt.estimatedTraffic || 'Mixed'}</div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
 
     async function showDirections() {
@@ -729,25 +549,63 @@
 
       clearRoute();
       const destRoad = getDestinationTraffic(destination);
-
       startMarker = L.marker(start).addTo(trafficMap).bindPopup(`<strong>Start</strong><br>${selectedName('origin')}`);
       destinationMarker = L.marker(destination).addTo(trafficMap).bindPopup(`<strong>Destination</strong><br>${selectedName('destination')}<br><span style="color:${colors[destRoad.status]};font-weight:bold">${labels[destRoad.status]}</span>`);
 
-      summary.innerHTML = `<strong>${selectedName('origin')} → ${selectedName('destination')}</strong><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]};"></span>${labels[destRoad.status]} near destination</div></div>`;
+      summary.innerHTML = '<div style="text-align:center;color:#1a73e8;padding:20px;font-weight:bold">⏳ Calculating routes...</div>';
 
       try {
-        const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${destination[1]},${destination[0]}?overview=full&geometries=geojson`;
+        const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${destination[1]},${destination[0]}?overview=full&geometries=geojson&alternatives=true`;
         const response = await fetch(url);
         if (!response.ok) throw new Error('Routing error');
 
         const data = await response.json();
         if (!data.routes || !data.routes[0]) throw new Error('No route');
 
-        const route = data.routes[0];
-        routeLine = L.geoJSON(route.geometry, { style: { color: colors[destRoad.status], weight: 7, opacity: 0.9 } }).addTo(trafficMap);
+        alternativeRoutes = data.routes.map((route, idx) => ({
+          geometry: route.geometry,
+          distance: route.distance,
+          duration: route.duration,
+          estimatedTraffic: idx === 0 ? 'Optimal' : idx === 1 ? 'Moderate' : 'Congested'
+        }));
+
+        selectedRouteIndex = 0;
+        const mainRoute = alternativeRoutes[0];
+
+        routeLine = L.geoJSON(mainRoute.geometry, { style: { color: colors[destRoad.status], weight: 7, opacity: 0.9 } }).addTo(trafficMap);
+        alternativeLines = [];
+        alternativeRoutes.forEach((route, idx) => {
+          if (idx > 0) {
+            const altLine = L.geoJSON(route.geometry, { style: { color: '#cccccc', weight: 3, opacity: 0.4, dashArray: '5, 5' } }).addTo(trafficMap);
+            alternativeLines.push(altLine);
+          }
+        });
+
         trafficMap.fitBounds(routeLine.getBounds(), { padding: [40, 40], maxZoom: 15 });
 
-        summary.innerHTML = `<strong>${selectedName('origin')} → ${selectedName('destination')}</strong><div style="margin-top:7px;font-size:14px">${(route.distance / 1000).toFixed(1)} km • about ${(route.duration / 60).toFixed(0)} min</div><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]};"></span>${labels[destRoad.status]} route</div></div>`;
+        summary.innerHTML = `
+          <strong>${selectedName('origin')} → ${selectedName('destination')}</strong>
+          <div style="margin-top:7px;font-size:14px"><strong>Route 1</strong> • ${(mainRoute.distance / 1000).toFixed(1)} km • about ${(mainRoute.duration / 60).toFixed(0)} min</div>
+          <div class="destination-traffic">
+            <div class="traffic-status">
+              <span class="traffic-dot" style="background:${colors[destRoad.status]};"></span>
+              ${labels[destRoad.status]} route
+            </div>
+          </div>
+          <div class="alternatives-container">
+            <div class="alternatives-title">🛣️ Alternative Routes</div>
+            ${alternativeRoutes.map((route, idx) => `
+              <div class="alternative-route ${idx === 0 ? 'selected' : ''}" onclick="selectRoute(${idx})">
+                <div class="alt-route-info">
+                  <div class="alt-route-details">
+                    <div class="alt-route-status">Route ${idx + 1} • ${(route.distance / 1000).toFixed(1)} km</div>
+                    <div class="alt-route-time">~${(route.duration / 60).toFixed(0)} min • ${route.estimatedTraffic}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
       } catch (error) {
         console.error(error);
         summary.innerHTML = `<strong>${selectedName('origin')} → ${selectedName('destination')}</strong><div style="margin-top:10px;color:#d93025">Unable to calculate route.</div>`;
