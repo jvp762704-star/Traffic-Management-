@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Traffic Management</title>
+
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin="">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f1f3f4;
+    overflow:hidden;
+}
+
+
+/* ================= LOGIN ================= */
+
+#loginPage{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#4285f4,#174ea6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.login-box{
+    width:360px;
+    background:white;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
+}
+
+.login-box h1{
+    color:#1a73e8;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.login-box p{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.login-box input{
+    width:100%;
+    padding:13px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    outline:none;
+}
+
+.login-box input:focus{
+    border-color:#1a73e8;
+}
+
+.login-box button{
+    width:100%;
+    padding:13px;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.login-box button:hover{
+    background:#1557b0;
+}
+
+#error{
+    color:#d93025;
+    text-align:center;
+    margin-top:12px;
+    display:none;
+}
+
+
+/* ================= DASHBOARD ================= */
+
+#dashboard{
+    display:flex;
+    flex-direction:column;
+    width:100vw;
+    height:100vh;
+    background:#f1f3f4;
+    padding:30px;
+    overflow:auto;
+}
+
+.dashboard-header{
+    background:white;
+    padding:24px 28px;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.dashboard-header h1{
+    color:#174ea6;
+    margin-bottom:6px;
+}
+
+.dashboard-header p{
+    color:#666;
+    font-size:14px;
+}
+
+#openMapBtn{
+    background:#1a73e8;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:background 0.3s;
+}
+
+#openMapBtn:hover{
+    background:#1557b0;
+}
+
+.dashboard-cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.dashboard-card{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.card-icon{
+    font-size:28px;
+}
+
+.dashboard-card h3{
+    font-size:14px;
+    color:#666;
+    margin-bottom:6px;
+}
+
+.dashboard-card strong{
+    font-size:28px;
+    color:#202124;
+}
+
+.dashboard-content{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.dashboard-panel{
+    background:white;
+    padding:24px;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+.dashboard-panel h2{
+    color:#202124;
+    font-size:18px;
+    margin-bottom:18px;
+}
+
+.traffic-overview{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.overview-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px;
+    background:#f8f9fa;
+    border-radius:8px;
+}
+
+.green-text{
+    color:#188038;
+    font-weight:bold;
+}
+
+.amber-text{
+    color:#f9ab00;
+    font-weight:bold;
+}
+
+.red-text{
+    color:#d93025;
+    font-weight:bold;
+}
+
+.system-info{
+    line-height:2;
+    color:#555;
+}
+
+.online{
+    color:#188038;
+    font-weight:bold;
+}
+
+
+/* ================= APP ================= */
+
+#app{
+    display:none;
+    width:100vw;
+    height:100vh;
+    position:relative;
+}
+
+
+/* ================= MAP ================= */
+
+#map{
+    position:absolute;
+    inset:0;
+    z-index:1;
+}
+
+.leaflet-control-attribution{
+    font-size:9px;
+}
+
+
+/* ================= GOOGLE STYLE SEARCH ================= */
+
+.search-panel{
+    position:absolute;
+    top:18px;
+    left:18px;
+    z-index:1000;
+    width:390px;
+}
+
+.search-box{
+    background:white;
+    border-radius:28px;
+    height:58px;
+    display:flex;
+    align-items:center;
+    padding:0 18px;
+    box-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+
+.search-icon{
+    font-size:22px;
+    color:#5f6368;
+    margin-right:12px;
+}
+
+.search-title{
+    font-size:16px;
+    color:#202124;
+    font-weight:500;
+}
+
+
+/* ================= DIRECTIONS PANEL ================= */
+
+.direction-panel{
+    margin-top:10px;
+    background:white;
+    border-radius:14px;
+    padding:16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.22);
+}
+
+.direction-row{
+    display:flex;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.direction-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    margin-right:10px;
+    flex-shrink:0;
+}
+
+.start-dot{
+    background:#1a73e8;
+}
+
+.destination-dot{
+    background:#d93025;
+}
+
+.direction-panel select{
+    flex:1;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:11px;
+    background:white;
+    outline:none;
+    font-size:14px;
+}
+
+.direction-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:8px;
+}
+
+.direction-buttons button{
+    flex:1;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition:all 0.3s;
+}
+
+#directionsBtn{
+    background:#1a73e8;
+    color:white;
+}
+
+#directionsBtn:hover{
+    background:#1557b0;
+}
+
+#clearBtn{
+    background:#f1f3f4;
+    color:#333;
+}
+
+#clearBtn:hover{
+    background:#e5e7e9;
+}
+
+
+/* ================= ROUTE CARD ================= */
+
+#routeCard{
+    background:white;
+    margin-top:10px;
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.22);
+    overflow:hidden;
+}
+
+.route-header{
+    padding:14px 16px;
+    border-bottom:1px solid #eee;
+    font-size:15px;
+    font-weight:bold;
+}
+
+#routeSummary{
+    padding:16px;
+    font-size:14px;
+    line-height:1.6;
+    color:#3c4043;
+}
+
+.destination-traffic{
+    margin-top:12px;
+    padding:12px;
+    border-radius:10px;
+    background:#f8f9fa;
+}
+
+.traffic-status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:bold;
+}
+
+.traffic-dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    display:inline-block;
+}
+
+
+/* ================= TRAFFIC LEGEND ================= */
+
+.traffic-panel{
+    position:absolute;
+    right:18px;
+    bottom:20px;
+    z-index:1000;
+    background:white;
+    border-radius:12px;
+    padding:13px 16px;
+    box-shadow:0 2px 10px rgba(0,0,0,.22);
+}
+
+.traffic-panel h3{
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    margin:6px 0;
+}
+
+.legend-color{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+}
+
+
+/* ================= REFRESH BUTTON ================= */
+
+#refreshBtn{
+    position:absolute;
+    right:18px;
+    top:18px;
+    z-index:1000;
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,.25);
+    font-size:20px;
+    cursor:pointer;
+    transition:background 0.3s;
+}
+
+#refreshBtn:hover{
+    background:#f1f3f4;
+}
+
+
+/* ================= TRAFFIC LIST ================= */
+
+#trafficList{
+    position:absolute;
+    right:18px;
+    top:75px;
+    z-index:1000;
+    width:260px;
+    max-height:400px;
+    overflow:auto;
+}
+
+.road-card{
+    background:white;
+    padding:12px;
+    margin-bottom:8px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
+    font-size:12px;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+
+.road-card:hover{
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    transform:translateY(-2px);
+}
+
+.road-name{
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+.road-status{
+    display:flex;
+    justify-content:space-between;
+}
+
+
+/* ================= MAP BUTTON STYLE ================= */
+
+.leaflet-control-zoom{
+    border:none!important;
+    box-shadow:0 2px 8px rgba(0,0,0,.25)!important;
+}
+
+.leaflet-control-zoom a{
+    border:none!important;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:800px){
+
+    #dashboard{
+        padding:15px;
+    }
+
+    .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    #openMapBtn{
+        width:100%;
+    }
+
+    .dashboard-cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .dashboard-content{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .search-panel{
+        left:10px;
+        right:10px;
+        width:auto;
+        top:10px;
+    }
+
+    .search-box{
+        height:52px;
+    }
+
+    .traffic-panel{
+        right:10px;
+        bottom:10px;
+    }
+
+    #trafficList{
+        display:none;
+    }
+
+    #refreshBtn{
+        top:72px;
+        right:10px;
+    }
+
+}
+
+@media(max-width:500px){
+
+    .dashboard-cards{
+        grid-template-columns:1fr;
+    }
+
+    .login-box{
+        width:calc(100% - 30px);
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+
+    <div class="login-box">
+
+        <h1>Smart Traffic</h1>
+
+        <p>Quezon City Traffic Management</p>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username">
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password">
+
+        <button onclick="login()">
+            Sign in
+        </button>
+
+        <div id="error">
+            Invalid username or password.
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Smart Traffic Dashboard
+            </h1>
+
+            <p>
+                Quezon City Traffic Management System
+            </p>
+
+        </div>
+
+        <button id="openMapBtn">
+            View Traffic Map
+        </button>
+
+    </div>
+
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🛣️
+            </div>
+
+            <div>
+
+                <h3>
+                    Total Roads
+                </h3>
+
+                <strong>
+                    7
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <h3>
+                    Free Flow
+                </h3>
+
+                <strong>
+                    2
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🟡
+            </div>
+
+            <div>
+
+                <h3>
+                    Moderate
+                </h3>
+
+                <strong>
+                    3
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="card-icon">
+                🔴
+            </div>
+
+            <div>
+
+                <h3>
+                    Heavy Traffic
+                </h3>
+
+                <strong>
+                    2
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-content">
+
+        <div class="dashboard-panel">
+
+            <h2>
+                Traffic Overview
+            </h2>
+
+            <div class="traffic-overview">
+
+                <div class="overview-row">
+
+                    <span>
+                        Free Flow
+                    </span>
+
+                    <span class="green-text">
+                        2 Roads
+                    </span>
+
+                </div>
+
+
+                <div class="overview-row">
+
+                    <span>
+                        Moderate
+                    </span>
+
+                    <span class="amber-text">
+                        3 Roads
+                    </span>
+
+                </div>
+
+
+                <div class="overview-row">
+
+                    <span>
+                        Heavy Traffic
+                    </span>
+
+                    <span class="red-text">
+                        2 Roads
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-panel">
+
+            <h2>
+                System Information
+            </h2>
+
+            <div class="system-info">
+
+                <p>
+                    <strong>System:</strong>
+                    Quezon City Smart Traffic Management
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <span class="online">
+                        ● Online
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Monitored Area:</strong>
+                    Quezon City
+                </p>
+
+                <p>
+                    <strong>Routing:</strong>
+                    OSRM Navigation
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app">
+
+    <div id="map"></div>
+
+
+    <!-- SEARCH / DIRECTIONS -->
+
+    <div class="search-panel">
+
+        <div class="search-box">
+
+            <div class="search-icon">
+                ⌕
+            </div>
+
+            <div class="search-title">
+                Quezon City Smart Traffic
+            </div>
+
+        </div>
+
+
+        <div class="direction-panel">
+
+            <div class="direction-row">
+
+                <span class="direction-dot start-dot"></span>
+
+                <select id="origin">
+
+                    <option value="14.6938,121.1020">
+                        Batasan Hills
+                    </option>
+
+                    <option value="14.6895,121.0825">
+                        Commonwealth
+                    </option>
+
+                    <option value="14.6870,121.0735">
+                        Holy Spirit
+                    </option>
+
+                    <option value="14.7000,121.1100">
+                        Payatas
+                    </option>
+
+                    <option value="14.6755,121.0980">
+                        Bagong Silangan
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="direction-row">
+
+                <span class="direction-dot destination-dot"></span>
+
+                <select id="destination">
+
+                    <option value="14.6895,121.0825">
+                        Commonwealth
+                    </option>
+
+                    <option value="14.6938,121.1020">
+                        Batasan Hills
+                    </option>
+
+                    <option value="14.6870,121.0735">
+                        Holy Spirit
+                    </option>
+
+                    <option value="14.7000,121.1100">
+                        Payatas
+                    </option>
+
+                    <option value="14.6755,121.0980">
+                        Bagong Silangan
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="direction-buttons">
+
+                <button id="directionsBtn">
+                    Directions
+                </button>
+
+                <button id="clearBtn">
+                    Clear
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ROUTE SUMMARY -->
+
+        <div id="routeCard">
+
+            <div class="route-header">
+                Route information
+            </div>
+
+            <div id="routeSummary">
+                Choose your starting point and destination.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- REFRESH -->
+
+    <button
+        id="refreshBtn"
+        title="Refresh traffic">
+
+        ↻
+
+    </button>
+
+
+    <!-- TRAFFIC LIST -->
+
+    <div id="trafficList"></div>
+
+
+    <!-- TRAFFIC LEGEND -->
+
+    <div class="traffic-panel">
+
+        <h3>
+            Traffic
+        </h3>
+
+        <div class="legend-item">
+
+            <span
+                class="legend-color"
+                style="background:#188038">
+            </span>
+
+            Free flow
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-color"
+                style="background:#f9ab00">
+            </span>
+
+            Moderate
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-color"
+                style="background:#d93025">
+            </span>
+
+            Heavy traffic
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin="">
+</script>
+
+<script>
+
+
+/* ================= LOGIN ================= */
+
+const users = {
+
+    aeronn:{
+        name:"Administrator"
+    },
+
+    angel:{
+        name:"Administrator"
+    },
+
+    lance:{
+        name:"Administrator"
+    }
+
+};
+
+
+function login(){
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("error");
+
+
+    if(users[username] && password === "1234"){
+
+        error.style.display="none";
+
+        document.getElementById("loginPage")
+            .style.display="none";
+
+        document.getElementById("dashboard")
+            .style.display="flex";
+
+        document.getElementById("app")
+            .style.display="none";
+
+    }else{
+
+        error.style.display="block";
+
+    }
+
+}
+
+
+document
+.getElementById("password")
+.addEventListener("keydown",function(event){
+
+    if(event.key==="Enter"){
+
+        login();
+
+    }
+
+});
+
+
+/* ================= MAP ================= */
+
+let trafficMap;
+
+let roadMarkers=[];
+
+let startMarker=null;
+
+let destinationMarker=null;
+
+let routeLine=null;
+
+
+const qcCenter=[
+    14.6915,
+    121.0920
+];
+
+
+const roads=[
+
+    {
+        name:"Commonwealth Avenue",
+        point:[14.6895,121.0825],
+        status:"red",
+        speed:16
+    },
+
+    {
+        name:"Batasan Road",
+        point:[14.6938,121.1020],
+        status:"amber",
+        speed:25
+    },
+
+    {
+        name:"Batasan–San Mateo Road",
+        point:[14.6970,121.1050],
+        status:"red",
+        speed:18
+    },
+
+    {
+        name:"Litex Road",
+        point:[14.6825,121.0910],
+        status:"amber",
+        speed:27
+    },
+
+    {
+        name:"Payatas Road",
+        point:[14.7000,121.1100],
+        status:"green",
+        speed:38
+    },
+
+    {
+        name:"Holy Spirit Drive",
+        point:[14.6870,121.0735],
+        status:"green",
+        speed:35
+    },
+
+    {
+        name:"Bagong Silangan Road",
+        point:[14.6755,121.0980],
+        status:"amber",
+        speed:24
+    }
+
+];
+
+
+const colors={
+
+    green:"#188038",
+
+    amber:"#f9ab00",
+
+    red:"#d93025"
+
+};
+
+
+const labels={
+
+    green:"Free flow",
+
+    amber:"Moderate",
+
+    red:"Heavy traffic"
+
+};
+
+
+/* ================= INITIALIZE MAP ================= */
+
+function initializeMap(){
+
+    if(trafficMap){
+
+        trafficMap.invalidateSize();
+
+        return;
+
+    }
+
+
+    trafficMap=L.map("map",{
+
+        zoomControl:true,
+
+        minZoom:11,
+
+        maxZoom:18
+
+    }).setView(qcCenter,13);
+
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom:19,
+            attribution:"© OpenStreetMap contributors"
+        }
+    ).addTo(trafficMap);
+
+
+    renderRoads();
+
+    renderTrafficList();
+
+}
+
+
+/* ================= ROAD POPUP ================= */
+
+function roadPopup(road){
+
+    return `
+
+        <strong>
+            ${road.name}
+        </strong>
+
+        <br>
+
+        <span style="
+            color:${colors[road.status]};
+            font-weight:bold;
+        ">
+            ${labels[road.status]}
+        </span>
+
+        <br>
+
+        Average speed:
+        ${road.speed} km/h
+
+    `;
+
+}
+
+
+/* ================= ROAD MARKERS ================= */
+
+function renderRoads(){
+
+    roadMarkers.forEach(item=>{
+
+        trafficMap.removeLayer(item.marker);
+
+    });
+
+    roadMarkers=[];
+
+
+    roads.forEach(road=>{
+
+        const marker=L.circleMarker(road.point,{
+
+            radius:8,
+
+            color:colors[road.status],
+
+            fillColor:colors[road.status],
+
+            fillOpacity:.85,
+
+            weight:2
+
+        }).addTo(trafficMap);
+
+
+        marker.bindPopup(roadPopup(road));
+
+
+        roadMarkers.push({
+
+            marker:marker,
+
+            road:road
+
+        });
+
+    });
+
+}
+
+
+/* ================= TRAFFIC LIST ================= */
+
+function renderTrafficList(){
+
+    const list =
+        document.getElementById("trafficList");
+
+    list.innerHTML="";
+
+
+    roads.forEach(road=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className="road-card";
+
+        card.innerHTML=`
+
+            <div class="road-name">
+                ${road.name}
+            </div>
+
+            <div class="road-status">
+
+                <span style="
+                    color:${colors[road.status]};
+                    font-weight:bold;
+                ">
+                    ${labels[road.status]}
+                </span>
+
+                <span>
+                    ${road.speed} km/h
+                </span>
+
+            </div>
+
+        `;
+
+
+        card.addEventListener("click",()=>{
+
+            if(trafficMap){
+
+                trafficMap.setView(road.point,15);
+
+                const marker=roadMarkers.find(
+                    item=>item.road===road
+                );
+
+                if(marker){
+
+                    marker.marker.openPopup();
+
+                }
+
+            }
+
+        });
+
+
+        list.appendChild(card);
+
+    });
+
+}
+
+
+/* ================= HELPERS ================= */
+
+function coords(id){
+
+    return document
+        .getElementById(id)
+        .value
+        .split(",")
+        .map(Number);
+
+}
+
+
+function selectedName(id){
+
+    const select =
+        document.getElementById(id);
+
+    return select
+        .selectedOptions[0]
+        .textContent
+        .trim();
+
+}
+
+
+/* ================= DESTINATION TRAFFIC ================= */
+
+function getDestinationTraffic(destination){
+
+    let nearestRoad=null;
+
+    let smallestDistance=Infinity;
+
+
+    roads.forEach(road=>{
+
+        const distance=Math.sqrt(
+
+            Math.pow(
+                road.point[0]-destination[0],
+                2
+            )
+
+            +
+
+            Math.pow(
+                road.point[1]-destination[1],
+                2
+            )
+
+        );
+
+
+        if(distance<smallestDistance){
+
+            smallestDistance=distance;
+
+            nearestRoad=road;
+
+        }
+
+    });
+
+
+    return nearestRoad;
+
+}
+
+
+/* ================= CLEAR ROUTE ================= */
+
+function clearRoute(){
+
+    if(startMarker){
+
+        trafficMap.removeLayer(startMarker);
+
+        startMarker=null;
+
+    }
+
+
+    if(destinationMarker){
+
+        trafficMap.removeLayer(destinationMarker);
+
+        destinationMarker=null;
+
+    }
+
+
+    if(routeLine){
+
+        trafficMap.removeLayer(routeLine);
+
+        routeLine=null;
+
+    }
+
+}
+
+
+/* ================= DIRECTIONS ================= */
+
+async function showDirections(){
+
+    const start=coords("origin");
+
+    const destination=coords("destination");
+
+    const summary =
+        document.getElementById("routeSummary");
+
+
+    if(
+
+        start[0]===destination[0]
+
+        &&
+
+        start[1]===destination[1]
+
+    ){
+
+        summary.innerHTML =
+            "Please choose two different locations.";
+
+        return;
+
+    }
+
+
+    clearRoute();
+
+
+    const destinationRoad =
+        getDestinationTraffic(destination);
+
+
+    startMarker=L.marker(start)
+
+        .addTo(trafficMap)
+
+        .bindPopup(`
+
+            <strong>
+                Starting point
+            </strong>
+
+            <br>
+
+            ${selectedName("origin")}
+
+        `);
+
+
+    destinationMarker=L.marker(destination)
+
+        .addTo(trafficMap)
+
+        .bindPopup(`
+
+            <strong>
+                Destination
+            </strong>
+
+            <br>
+
+            ${selectedName("destination")}
+
+            <br><br>
+
+            <strong style="
+                color:${colors[destinationRoad.status]}
+            ">
+
+                ${labels[destinationRoad.status]}
+
+            </strong>
+
+            <br>
+
+            Average speed:
+            ${destinationRoad.speed} km/h
+
+        `);
+
+
+    summary.innerHTML=`
+
+        <strong>
+            ${selectedName("origin")}
+            →
+            ${selectedName("destination")}
+        </strong>
+
+        <div class="destination-traffic">
+
+            <div class="traffic-status">
+
+                <span
+                    class="traffic-dot"
+                    style="
+                        background:
+                        ${colors[destinationRoad.status]}
+                    ">
+                </span>
+
+                Destination traffic:
+                ${labels[destinationRoad.status]}
+
+            </div>
+
+            <div style="
+                margin-top:5px;
+                color:#666;
+            ">
+
+                ${destinationRoad.name}
+
+                ·
+
+                ${destinationRoad.speed} km/h
+
+            </div>
+
+        </div>
+
+        <div style="
+            margin-top:10px;
+            color:#666;
+        ">
+
+            Loading route...
+
+        </div>
+
+    `;
+
+
+    try{
+
+        const url=
+
+            `https://router.project-osrm.org/route/v1/driving/`
+
+            +
+
+            `${start[1]},${start[0]};`
+
+            +
+
+            `${destination[1]},${destination[0]}`
+
+            +
+
+            `?overview=full&geometries=geojson`;
+
+
+        const response =
+            await fetch(url);
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Routing unavailable"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !data.routes ||
+            !data.routes[0]
+        ){
+
+            throw new Error(
+                "No route"
+            );
+
+        }
+
+
+        const route =
+            data.routes[0];
+
+
+        routeLine=L.geoJSON(
+
+            route.geometry,
+
+            {
+
+                style:{
+
+                    color:
+                        colors[destinationRoad.status],
+
+                    weight:7,
+
+                    opacity:.9
+
+                }
+
+            }
+
+        ).addTo(trafficMap);
+
+
+        trafficMap.fitBounds(
+
+            routeLine.getBounds(),
+
+            {
+                padding:[40,40],
+                maxZoom:15
+            }
+
+        );
+
+
+        summary.innerHTML=`
+
+            <strong>
+                ${selectedName("origin")}
+                →
+                ${selectedName("destination")}
+            </strong>
+
+            <div style="
+                margin-top:7px;
+                font-size:14px;
+            ">
+
+                ${(route.distance/1000).toFixed(1)}
+                km
+
+                ·
+
+                about
+
+                ${Math.max(
+                    1,
+                    Math.round(route.duration/60)
+                )}
+
+                min
+
+            </div>
+
+            <div class="destination-traffic">
+
+                <div class="traffic-status">
+
+                    <span
+                        class="traffic-dot"
+                        style="
+                            background:
+                            ${colors[destinationRoad.status]}
+                        ">
+                    </span>
+
+                    Destination traffic:
+                    ${labels[destinationRoad.status]}
+
+                </div>
+
+                <div style="
+                    margin-top:5px;
+                    color:#666;
+                ">
+
+                    ${destinationRoad.name}
+
+                    ·
+
+                    ${destinationRoad.speed} km/h
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        summary.innerHTML=`
+
+            <strong>
+                ${selectedName("origin")}
+                →
+                ${selectedName("destination")}
+            </strong>
+
+            <div style="
+                margin-top:10px;
+                color:#d93025;
+            ">
+
+                Unable to calculate route.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ================= DASHBOARD MAP BUTTON ================= */
+
+document.getElementById("openMapBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            document.getElementById("dashboard")
+                .style.display="none";
+
+            document.getElementById("app")
+                .style.display="block";
+
+            initializeMap();
+
+            setTimeout(()=>{
+
+                trafficMap.invalidateSize();
+
+            },100);
+
+        }
+    );
+
+
+/* ================= BUTTONS ================= */
+
+document.getElementById("directionsBtn")
+    .addEventListener(
+        "click",
+        showDirections
+    );
+
+
+document.getElementById("clearBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            clearRoute();
+
+            document.getElementById(
+                "routeSummary"
+            ).innerHTML =
+                "Choose your starting point and destination.";
+
+        }
+    );
+
+
+document.getElementById("refreshBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            renderRoads();
+
+            renderTrafficList();
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
