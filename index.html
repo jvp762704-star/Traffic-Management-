@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Traffic Management - Real-time Monitoring</title>
+<title>Smart traffic Management System "District 2"</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <style>
 
@@ -97,7 +97,7 @@ body{background:#f1f3f4;overflow:hidden}
 .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;margin:6px 0}
 .legend-color{width:12px;height:12px;border-radius:50%}
 
-#refreshBtn{position:absolute;right:18px;top:18px;z-index:1000;width:45px;height:45px;border:none;border-radius:50%;background:white;box-shadow:0 2px 10px rgba(0,0,0,.25);font-size:20px;cursor:pointer;transition:all 0.3s}
+#refreshBtn{position:absolute;right:18px;top:18px;z-index:1000;width:45px;height:45px;border:none;border-radius:50%;background:white;box-shadow:0 2px 10px rgba(0,0,0,.25);font-size:20px;cursor:pointer}
 #refreshBtn:hover{background:#f1f3f4}
 #refreshBtn.updating{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -141,8 +141,8 @@ body{background:#f1f3f4;overflow:hidden}
 <body>
 <div id="loginPage">
     <div class="login-box">
-        <h1>Smart Traffic</h1>
-        <p>Real-time Traffic Monitoring System</p>
+        <h1>Smart traffic Management System</h1>
+        <p>"District 2"</p>
         <input type="text" id="username" placeholder="Username">
         <input type="password" id="password" placeholder="Password">
         <button onclick="login()">Sign in</button>
@@ -507,9 +507,9 @@ async function showDirections(){
     const destRoad = getDestinationTraffic(destination);
 
     startMarker = L.marker(start).addTo(trafficMap).bindPopup(`<strong>Start</strong><br>${selectedName("origin")}`);
-    destinationMarker = L.marker(destination).addTo(trafficMap).bindPopup(`<strong>Destination</strong><br>${selectedName("destination")}<br><span style="color:${colors[destRoad.status]};font-weight:bold">${labels[destRoad.status]}</span><br>${destRoad.speed.toFixed(0)} km/h`);
+    destinationMarker = L.marker(destination).addTo(trafficMap).bindPopup(`<strong>Destination</strong><br>${selectedName("destination")}<br><span style="color:${colors[destRoad.status]};font-weight:bold">${labels[destRoad.status]}</span>`);
 
-    summary.innerHTML = `<strong>${selectedName("origin")} → ${selectedName("destination")}</strong><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]}"></span>Destination: ${labels[destRoad.status]}</div><div style="margin-top:5px;color:#666">${destRoad.name} • ${destRoad.speed.toFixed(0)} km/h</div></div><div style="margin-top:10px;color:#666">Loading route...</div>`;
+    summary.innerHTML = `<strong>${selectedName("origin")} → ${selectedName("destination")}</strong><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]}"></span>${labels[destRoad.status]} near destination</div></div>`;
 
     try{
         const url = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${destination[1]},${destination[0]}?overview=full&geometries=geojson`;
@@ -523,7 +523,7 @@ async function showDirections(){
         routeLine = L.geoJSON(route.geometry, {style:{color:colors[destRoad.status],weight:7,opacity:.9}}).addTo(trafficMap);
         trafficMap.fitBounds(routeLine.getBounds(), {padding:[40,40],maxZoom:15});
 
-        summary.innerHTML = `<strong>${selectedName("origin")} → ${selectedName("destination")}</strong><div style="margin-top:7px;font-size:14px">${(route.distance/1000).toFixed(1)} km • about ${Math.max(1, Math.round(route.duration/60))} min</div><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]}"></span>Destination: ${labels[destRoad.status]}</div><div style="margin-top:5px;color:#666">${destRoad.name} • ${destRoad.speed.toFixed(0)} km/h</div></div>`;
+        summary.innerHTML = `<strong>${selectedName("origin")} → ${selectedName("destination")}</strong><div style="margin-top:7px;font-size:14px">${(route.distance/1000).toFixed(1)} km • about ${(route.duration/60).toFixed(0)} minutes</div><div class="destination-traffic"><div class="traffic-status"><span class="traffic-dot" style="background:${colors[destRoad.status]}"></span>${labels[destRoad.status]} near destination</div></div>`;
     }catch(error){
         console.error(error);
         summary.innerHTML = `<strong>${selectedName("origin")} → ${selectedName("destination")}</strong><div style="margin-top:10px;color:#d93025">Unable to calculate route.</div>`;
