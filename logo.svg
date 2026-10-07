@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Smart Traffic Management System District 2 logo">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#3ec7ff"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="360" fill="none"/>
+
+  <g transform="translate(35 35)">
+    <rect x="0" y="0" width="290" height="290" rx="66" fill="url(#bg)"/>
+    <rect x="18" y="18" width="254" height="254" rx="48" fill="url(#glass)" stroke="rgba(255,255,255,0.25)"/>
+
+    <g transform="translate(54 44)">
+      <circle cx="90" cy="90" r="78" fill="rgba(255,255,255,0.12)"/>
+      <path d="M90 20c-31 0-56 25-56 56 0 42 56 96 56 96s56-54 56-96c0-31-25-56-56-56zm0 83c-15 0-27-12-27-27s12-27 27-27 27 12 27 27-12 27-27 27z" fill="#ffffff"/>
+      <path d="M57 130h66l22 30H35z" fill="#ffffff" opacity="0.82"/>
+      <path d="M49 155h82l-16 58H65z" fill="#ffffff" opacity="0.64"/>
+
+      <path d="M145 80l38 28 24-18 16 16-38 30-41-25-18 15 19 14H90l-18-19 13-12 18 18 17-14 30-22-6-10z" fill="#ffffff" opacity="0.9"/>
+
+      <g transform="translate(165 18)">
+        <rect x="0" y="0" width="45" height="15" rx="7.5" fill="#ffffff" opacity="0.9"/>
+        <rect x="0" y="25" width="45" height="15" rx="7.5" fill="#ffffff" opacity="0.9"/>
+        <rect x="0" y="50" width="45" height="15" rx="7.5" fill="#ffffff" opacity="0.85"/>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(350 90)">
+    <text x="0" y="60" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" letter-spacing="1.2" fill="#1f2937">SMART</text>
+    <text x="0" y="110" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" letter-spacing="2" fill="#1a73e8">TRAFFIC</text>
+    <text x="0" y="160" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="1.8" fill="#0f172a">MANAGEMENT</text>
+    <text x="0" y="205" font-family="Arial, Helvetica, sans-serif" font-size="46" font-weight="900" letter-spacing="2" fill="#0f172a">DISTRICT 2</text>
+    <rect x="0" y="222" width="180" height="8" rx="4" fill="#1a73e8" opacity="0.9"/>
+  </g>
+</svg>
