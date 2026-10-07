@@ -11,7 +11,7 @@
 body{background:#f1f3f4;overflow:hidden}
 
 #loginPage{position:fixed;inset:0;background:#000;display:flex;justify-content:center;align-items:center;z-index:9999}
-.login-box{width:min(92vw,780px);background:transparent;padding:0;border-radius:18px;box-shadow:none;display:flex;justify-content:center;align-items:center}
+.login-box{width:min(92vw,820px);background:transparent;padding:0;border-radius:18px;box-shadow:none;display:flex;justify-content:center;align-items:center}
 .login-box h1,.login-box p{display:none}
 
 .brand-logo-wrap{
@@ -22,10 +22,13 @@ body{background:#f1f3f4;overflow:hidden}
     align-items:center;
     filter:drop-shadow(0 0 12px rgba(81,191,255,.25));
 }
-.brand-logo-svg{
+.brand-logo{
     width:100%;
     height:auto;
     display:block;
+    border-radius:18px;
+    object-fit:contain;
+    background:transparent;
 }
 
 #dashboard{display:flex;flex-direction:column;width:100vw;height:100vh;background:#f1f3f4;padding:30px;overflow:auto}
@@ -149,172 +152,8 @@ body{background:#f1f3f4;overflow:hidden}
 <body>
 <div id="loginPage">
     <div class="login-box">
-        <div class="brand-logo-wrap" aria-label="Smart Traffic Management System District 2 logo">
-            <svg class="brand-logo-svg" viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle logoDesc">
-                <title id="logoTitle">Smart Traffic Management System District 2</title>
-                <desc id="logoDesc">A circular traffic management logo with city skyline, signal lights, camera and road.</desc>
-
-                <defs>
-                    <linearGradient id="ringStroke" x1="0%" x2="100%" y1="0%" y2="100%">
-                        <stop offset="0%" stop-color="#1ae3ff"/>
-                        <stop offset="40%" stop-color="#17b9ff"/>
-                        <stop offset="100%" stop-color="#2c5dff"/>
-                    </linearGradient>
-                    <linearGradient id="panelFill" x1="0%" x2="100%" y1="0%" y2="100%">
-                        <stop offset="0%" stop-color="#0b1d3a"/>
-                        <stop offset="100%" stop-color="#0a1535"/>
-                    </linearGradient>
-                    <linearGradient id="roadFill" x1="0%" x2="100%" y1="0%" y2="0%">
-                        <stop offset="0%" stop-color="#0a0f1c"/>
-                        <stop offset="100%" stop-color="#111a2d"/>
-                    </linearGradient>
-                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#42d7ff" flood-opacity="0.55"/>
-                    </filter>
-                </defs>
-
-                <g filter="url(#glow)">
-                    <path d="M141 417c0-156 127-283 283-283h272c156 0 283 127 283 283 0 150-119 276-269 282l-6 1h-302c-156 0-283-127-283-283Z" fill="none" stroke="url(#ringStroke)" stroke-width="21" stroke-linecap="round"/>
-
-                    <path d="M205 421c0-30 24-54 54-54h12c37 0 68 28 76 64l6 31c8 36-21 71-58 71H278c-40 0-73-33-73-73Z" fill="none" stroke="url(#ringStroke)" stroke-width="16" opacity="0.9"/>
-                    <path d="M829 421c0-30-24-54-54-54h-12c-37 0-68 28-76 64l-6 31c-8 36 21 71 58 71h72c40 0 73-33 73-73Z" fill="none" stroke="url(#ringStroke)" stroke-width="16" opacity="0.9"/>
-
-                    <path d="M560 176c-77 0-138 58-149 133h298c-11-75-72-133-149-133Z" fill="none" stroke="url(#ringStroke)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M458 217c40-22 78-33 116-33 36 0 70 11 102 33" fill="none" stroke="url(#ringStroke)" stroke-width="18" stroke-linecap="round"/>
-
-                    <path d="M408 309c0-12 10-22 22-22h118c12 0 22 10 22 22v129h-162V309Z" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="285" y="305" width="54" height="180" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="333" y="360" width="54" height="125" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="592" y="302" width="54" height="183" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="644" y="354" width="54" height="131" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="707" y="280" width="44" height="205" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-                    <rect x="752" y="338" width="52" height="147" rx="7" fill="url(#panelFill)" stroke="url(#ringStroke)" stroke-width="8"/>
-
-                    <g fill="#0a1b38" stroke="url(#ringStroke)" stroke-width="4">
-                        <rect x="318" y="330" width="12" height="12" rx="2"/>
-                        <rect x="343" y="330" width="12" height="12" rx="2"/>
-                        <rect x="368" y="330" width="12" height="12" rx="2"/>
-                        <rect x="318" y="355" width="12" height="12" rx="2"/>
-                        <rect x="343" y="355" width="12" height="12" rx="2"/>
-                        <rect x="368" y="355" width="12" height="12" rx="2"/>
-                        <rect x="318" y="380" width="12" height="12" rx="2"/>
-                        <rect x="343" y="380" width="12" height="12" rx="2"/>
-                        <rect x="368" y="380" width="12" height="12" rx="2"/>
-                        <rect x="318" y="405" width="12" height="12" rx="2"/>
-                        <rect x="343" y="405" width="12" height="12" rx="2"/>
-                        <rect x="368" y="405" width="12" height="12" rx="2"/>
-
-                        <rect x="430" y="332" width="12" height="12" rx="2"/>
-                        <rect x="455" y="332" width="12" height="12" rx="2"/>
-                        <rect x="480" y="332" width="12" height="12" rx="2"/>
-                        <rect x="430" y="357" width="12" height="12" rx="2"/>
-                        <rect x="455" y="357" width="12" height="12" rx="2"/>
-                        <rect x="480" y="357" width="12" height="12" rx="2"/>
-                        <rect x="430" y="382" width="12" height="12" rx="2"/>
-                        <rect x="455" y="382" width="12" height="12" rx="2"/>
-                        <rect x="480" y="382" width="12" height="12" rx="2"/>
-                        <rect x="430" y="407" width="12" height="12" rx="2"/>
-                        <rect x="455" y="407" width="12" height="12" rx="2"/>
-                        <rect x="480" y="407" width="12" height="12" rx="2"/>
-
-                        <rect x="626" y="318" width="12" height="12" rx="2"/>
-                        <rect x="651" y="318" width="12" height="12" rx="2"/>
-                        <rect x="676" y="318" width="12" height="12" rx="2"/>
-                        <rect x="626" y="343" width="12" height="12" rx="2"/>
-                        <rect x="651" y="343" width="12" height="12" rx="2"/>
-                        <rect x="676" y="343" width="12" height="12" rx="2"/>
-                        <rect x="626" y="368" width="12" height="12" rx="2"/>
-                        <rect x="651" y="368" width="12" height="12" rx="2"/>
-                        <rect x="676" y="368" width="12" height="12" rx="2"/>
-                        <rect x="626" y="393" width="12" height="12" rx="2"/>
-                        <rect x="651" y="393" width="12" height="12" rx="2"/>
-                        <rect x="676" y="393" width="12" height="12" rx="2"/>
-
-                        <rect x="720" y="298" width="14" height="14" rx="2"/>
-                        <rect x="720" y="322" width="14" height="14" rx="2"/>
-                        <rect x="720" y="346" width="14" height="14" rx="2"/>
-                        <rect x="720" y="370" width="14" height="14" rx="2"/>
-                        <rect x="720" y="394" width="14" height="14" rx="2"/>
-                        <rect x="720" y="418" width="14" height="14" rx="2"/>
-                        <rect x="765" y="354" width="14" height="14" rx="2"/>
-                        <rect x="765" y="378" width="14" height="14" rx="2"/>
-                        <rect x="765" y="402" width="14" height="14" rx="2"/>
-                        <rect x="765" y="426" width="14" height="14" rx="2"/>
-                    </g>
-
-                    <g>
-                        <path d="M560 328c-60 0-108 48-108 108 0 86 98 176 108 176 10 0 108-90 108-176 0-60-48-108-108-108Z" fill="#1bc7ff" opacity="0.2"/>
-                        <path d="M560 337c-53 0-96 43-96 96 0 74 80 150 96 165 16-15 96-91 96-165 0-53-43-96-96-96Z" fill="#1ae3ff" opacity="0.18"/>
-                        <path d="M560 385c-21 0-38 17-38 38 0 25 25 53 38 68 13-15 38-43 38-68 0-21-17-38-38-38Z" fill="#1ae3ff" stroke="#c9f6ff" stroke-width="7"/>
-                        <path d="M560 339l-9 44h18l-9-44Z" fill="#d8faff"/>
-                    </g>
-
-                    <g>
-                        <path d="M278 489c57-18 98-60 116-113l11 5c-12 53-53 100-112 121l-15-13Z" fill="none" stroke="url(#ringStroke)" stroke-width="12" stroke-linecap="round"/>
-                        <path d="M784 498c-58-16-98-58-116-111l-11 5c12 53 53 101 113 122l14-16Z" fill="none" stroke="url(#ringStroke)" stroke-width="12" stroke-linecap="round"/>
-                    </g>
-
-                    <g>
-                        <circle cx="560" cy="240" r="20" fill="#1ae3ff" opacity="0.22"/>
-                        <circle cx="560" cy="240" r="13" fill="#1ae3ff"/>
-                    </g>
-
-                    <g>
-                        <rect x="174" y="430" width="82" height="32" rx="8" fill="#1a2d52" stroke="#00d4ff" stroke-width="6"/>
-                        <circle cx="206" cy="478" r="18" fill="#ff3b30"/>
-                        <circle cx="232" cy="478" r="18" fill="#ffcb2f"/>
-                        <circle cx="258" cy="478" r="18" fill="#39d353"/>
-                        <line x1="214" y1="440" x2="214" y2="474" stroke="#00d4ff" stroke-width="6" stroke-linecap="round"/>
-                        <line x1="240" y1="440" x2="240" y2="474" stroke="#00d4ff" stroke-width="6" stroke-linecap="round"/>
-                        <line x1="266" y1="440" x2="266" y2="474" stroke="#00d4ff" stroke-width="6" stroke-linecap="round"/>
-                    </g>
-
-                    <g>
-                        <rect x="801" y="438" width="112" height="56" rx="8" fill="#1a2d52" stroke="#00d4ff" stroke-width="6"/>
-                        <rect x="864" y="420" width="48" height="68" rx="4" fill="#1a2d52" stroke="#00d4ff" stroke-width="6"/>
-                        <circle cx="856" cy="454" r="12" fill="#00d4ff"/>
-                        <path d="M840 466h20" stroke="#00d4ff" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M881 466h14" stroke="#00d4ff" stroke-width="5" stroke-linecap="round"/>
-                    </g>
-
-                    <g>
-                        <path d="M205 632H915" stroke="url(#ringStroke)" stroke-width="20" stroke-linecap="round"/>
-                        <path d="M232 664h646" stroke="#d7e8ff" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
-                    </g>
-
-                    <g>
-                        <path d="M266 615h98c24 0 42 21 42 43v12H252v-12c0-22 18-43 42-43Z" fill="#0b1831" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M314 615v-34h40v34" fill="#0b1831" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <circle cx="284" cy="636" r="18" fill="#08172d" stroke="#d9f8ff" stroke-width="6"/>
-                        <circle cx="364" cy="636" r="18" fill="#08172d" stroke="#d9f8ff" stroke-width="6"/>
-                        <path d="M220 624h60c20 0 38 18 38 38v17h-90c-18 0-32-14-32-32v-8c0-10 8-15 24-15Z" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M371 624h58c21 0 38 17 38 38v17h-84c-18 0-32-14-32-32v-9c0-9 6-14 20-14Z" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <circle cx="558" cy="642" r="18" fill="#08172d" stroke="#d9f8ff" stroke-width="6"/>
-                        <circle cx="685" cy="642" r="18" fill="#08172d" stroke="#d9f8ff" stroke-width="6"/>
-                        <path d="M508 635h117c23 0 42 18 42 41v16H477v-16c0-23 19-41 42-41Z" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M667 635h118c24 0 44 18 44 42v15H632v-15c0-24 20-42 44-42Z" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M539 632v-30h54v30" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M695 632v-30h54v30" fill="#08172d" stroke="url(#ringStroke)" stroke-width="6"/>
-                        <path d="M270 622h28" stroke="#d9f8ff" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M355 622h28" stroke="#d9f8ff" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M525 622h30" stroke="#d9f8ff" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M681 622h28" stroke="#d9f8ff" stroke-width="5" stroke-linecap="round"/>
-                        <path d="M865 625h24" stroke="#d9f8ff" stroke-width="5" stroke-linecap="round"/>
-                    </g>
-
-                    <g>
-                        <path d="M269 703h581l-28 71H294l-25-71Z" fill="#0d1b32" stroke="url(#ringStroke)" stroke-width="10"/>
-                        <text x="560" y="760" text-anchor="middle" font-size="56" font-weight="900" fill="#eaf7ff" letter-spacing="1.2" font-family="Arial, Helvetica, sans-serif">SMART TRAFFIC MANAGEMENT SYSTEM</text>
-                    </g>
-                </g>
-
-                <g fill="none" stroke="#78ebff" stroke-width="7" stroke-linecap="round" opacity="0.8">
-                    <path d="M260 200c40-52 92-85 145-88"/>
-                    <path d="M860 200c-40-52-92-85-145-88"/>
-                    <path d="M282 234c58-37 119-56 178-58"/>
-                    <path d="M838 234c-58-37-119-56-178-58"/>
-                </g>
-            </svg>
+        <div class="brand-logo-wrap">
+            <img class="brand-logo" src="https://kommodo.ai/i/YIJDlc04xqzPOXQXCvOZ" alt="Smart Traffic Management System District 2 logo" />
         </div>
     </div>
 </div>
