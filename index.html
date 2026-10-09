@@ -15,7 +15,7 @@
     .brand-logo-wrap { width: min(42vw, 420px); max-width: 420px; display: flex; justify-content: center; align-items: center; filter: drop-shadow(0 0 12px rgba(81,191,255,.25)); }
     .brand-logo { width: 100%; height: auto; display: block; border-radius: 18px; object-fit: contain; background: transparent; }
 
-    .login-form { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 18px; padding: 24px 22px; width: min(90vw, 420px); display: flex; flex-direction: column; gap: 14px; }
+    .login-form { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 18px; padding: 24px 22px; width: min(90vw, 420px); display: flex; flex-direction: column; gap: 12px; }
     .login-field { display: flex; flex-direction: column; gap: 8px; text-align: left; }
     .login-field label { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.4px; }
     .login-field input { width: 100%; padding: 12px 14px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.08); color: white; font-size: 15px; outline: none; }
@@ -25,7 +25,7 @@
     .error-message { display: none; background: rgba(217,48,37,0.15); border: 1px solid rgba(217,48,37,0.6); border-radius: 10px; color: #ffc9c9; padding: 10px 12px; font-size: 13px; text-align: center; }
 
     #dashboard { display: none; flex-direction: column; width: 100vw; height: 100vh; background: #f1f3f4; padding: 30px; overflow: auto; }
-    .dashboard-header { background: white; padding: 24px 28px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .dashboard-header { background: white; padding: 24px 28px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .dashboard-header h1 { color: #174ea6; margin-bottom: 6px; }
     .dashboard-header p { color: #666; font-size: 14px; }
     #openMapBtn { background: #1a73e8; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
@@ -112,10 +112,11 @@
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 6px 0; }
     .legend-color { width: 12px; height: 12px; border-radius: 50%; }
 
-    #refreshBtn { position: absolute; right: 18px; top: 18px; z-index: 1000; width: 45px; height: 45px; border: none; border-radius: 50%; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.25); font-size: 22px; cursor: pointer; }
-    #refreshBtn:hover { background: #f1f3f4; }
-    #refreshBtn.updating { animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .live-indicator { position: absolute; top: 18px; right: 18px; z-index: 1000; background: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.3s; }
+    .live-indicator:hover { background: #f1f3f4; }
+    .live-indicator.active { animation: pulse-live 1.5s infinite; }
+    @keyframes pulse-live { 0% { box-shadow: 0 0 0 0 rgba(24,128,56,0.7); } 70% { box-shadow: 0 0 0 10px rgba(24,128,56,0); } }
+    .live-status { font-size: 12px; color: #999; margin-top: 8px; text-align: center; }
 
     #trafficList { position: absolute; right: 18px; top: 75px; z-index: 1000; width: 280px; max-height: 450px; overflow-y: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.22); }
     .road-card { padding: 14px; border-bottom: 1px solid #eee; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
@@ -130,9 +131,26 @@
     .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important; }
     .leaflet-control-zoom a { border: none !important; }
 
-    @media (max-width: 800px) { #dashboard { padding: 15px; } .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; } #openMapBtn { width: 100%; } .dashboard-cards { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 700px) { .search-panel { left: 10px; right: 10px; width: auto; top: 10px; } .traffic-panel { right: 10px; bottom: 10px; } #trafficList { display: none; } #refreshBtn { top: 10px; } }
-    @media (max-width: 500px) { .dashboard-cards { grid-template-columns: 1fr; } .login-box { width: calc(100% - 30px); } .dashboard-content { grid-template-columns: 1fr; } .brand-logo-wrap { width: min(70vw, 300px); } }
+    .vehicle-marker { width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+
+    @media (max-width: 800px) { 
+      #dashboard { padding: 15px; } 
+      .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; } 
+      #openMapBtn { width: 100%; } 
+      .dashboard-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) { 
+      .search-panel { left: 10px; right: 10px; width: auto; top: 10px; } 
+      .traffic-panel { right: 10px; bottom: 10px; } 
+      #trafficList { display: none; } 
+      #refreshBtn { top: 75px; }
+    }
+    @media (max-width: 500px) { 
+      .dashboard-cards { grid-template-columns: 1fr; } 
+      .login-box { width: calc(100% - 30px); } 
+      .dashboard-content { grid-template-columns: 1fr; } 
+      .brand-logo-wrap { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -140,7 +158,7 @@
     <div class="login-box">
       <h1>Smart Traffic Management System "District 2"</h1>
       <div class="brand-logo-wrap">
-        <img class="brand-logo" src="https://res.cloudinary.com/dtz0urit6/image/upload/q_auto:best,f_jpg/cloudinary-tools-uploads/esvdyfiv4jdm6puqvo52" alt="Smart Traffic Management System District 2 Logo" />
+        <img class="brand-logo" src="https://res.cloudinary.com/dtz0urit6/image/upload/q_auto:best,f_jpg/cloudinary-tools-uploads/esvdyfiv4jdm6puqvo52" alt="Smart Traffic Management System District 2" />
       </div>
 
       <form class="login-form" onsubmit="event.preventDefault(); login();" novalidate>
@@ -213,7 +231,7 @@
         <div class="traffic-overview">
           <div class="overview-row"><span>Average City Speed</span><span id="avgSpeed" style="font-size:18px;font-weight:bold;color:#1a73e8">-- km/h</span></div>
           <div class="overview-row"><span>Roads with Congestion</span><span id="congestedRoads" style="font-size:18px;font-weight:bold;color:#d93025">0</span></div>
-          <div class="overview-row"><span>System Status</span><span style="color:#188038;font-weight:bold">● Online</span></div>
+          <div class="overview-row"><span>System Status</span><span id="systemStatus" style="color:#188038;font-weight:bold">● Online</span></div>
           <div class="overview-row"><span>Last Updated</span><span id="lastUpdate" style="font-size:12px;color:#999">Just now</span></div>
         </div>
       </div>
@@ -279,20 +297,40 @@
       </div>
     </div>
 
-    <button id="refreshBtn" title="Refresh live traffic data">↻</button>
+    <div class="live-indicator active" id="liveIndicator" title="Live traffic updates">
+      <div>🔴</div>
+    </div>
+    <div class="live-status" id="liveStatus">LIVE</div>
+    
     <div id="trafficList"></div>
 
     <div class="traffic-panel">
       <h3>Traffic Status</h3>
-      <div class="legend-item"><span class="legend-color" style="background:#188038"></span>Free flow (&gt;35 km/h)</div>
+      <div class="legend-item"><span class="legend-color" style="background:#188038"></span>Free flow (>35 km/h)</div>
       <div class="legend-item"><span class="legend-color" style="background:#f9ab00"></span>Moderate (25-35 km/h)</div>
-      <div class="legend-item"><span class="legend-color" style="background:#d93025"></span>Heavy (&lt;25 km/h)</div>
+      <div class="legend-item"><span class="legend-color" style="background:#d93025"></span>Heavy (<25 km/h)</div>
     </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script>
     const users = { aeronn: { name: 'Administrator' }, angel: { name: 'Administrator' }, lance: { name: 'Administrator' } };
+    
+    // Real-time Traffic System Configuration
+    const REAL_TIME_CONFIG = {
+      updateInterval: 3000, // Update every 3 seconds for real-time feel
+      vehiclesPerRoad: 5,
+      mapRefreshRate: 2000,
+      trafficFlowSmoothing: 0.4,
+      trafficVolatility: 0.08
+    };
+
+    let trafficSystem = {
+      isLive: true,
+      lastUpdateTime: Date.now(),
+      updateCount: 0,
+      connectionStatus: 'connected'
+    };
 
     function login() {
       const username = document.getElementById('username').value.trim();
@@ -316,31 +354,114 @@
 
     const qcCenter = [14.6915, 121.0920];
     const roads = [
-      { name: 'Commonwealth Avenue', point: [14.6895, 121.0825], status: 'red', speed: 16, incident: 'Heavy congestion' },
-      { name: 'Batasan Road', point: [14.6938, 121.1020], status: 'amber', speed: 25 },
-      { name: 'Batasan–San Mateo Road', point: [14.6970, 121.1050], status: 'red', speed: 18, incident: 'Accident reported' },
-      { name: 'Litex Road', point: [14.6825, 121.0910], status: 'amber', speed: 27 },
-      { name: 'Payatas Road', point: [14.7000, 121.1100], status: 'green', speed: 38 },
-      { name: 'Holy Spirit Drive', point: [14.6870, 121.0735], status: 'green', speed: 35 },
-      { name: 'Bagong Silangan Road', point: [14.6755, 121.0980], status: 'amber', speed: 24 }
+      { name: 'Commonwealth Avenue', point: [14.6895, 121.0825], status: 'red', speed: 16, incident: 'Heavy congestion', vehicles: [], baseSpeed: 20, congestionLevel: 0.8 },
+      { name: 'Batasan Road', point: [14.6938, 121.1020], status: 'amber', speed: 25, vehicles: [], baseSpeed: 32, congestionLevel: 0.3 },
+      { name: 'Batasan–San Mateo Road', point: [14.6970, 121.1050], status: 'red', speed: 18, incident: 'Accident reported', vehicles: [], baseSpeed: 25, congestionLevel: 0.7 },
+      { name: 'Litex Road', point: [14.6825, 121.0910], status: 'amber', speed: 27, vehicles: [], baseSpeed: 35, congestionLevel: 0.2 },
+      { name: 'Payatas Road', point: [14.7000, 121.1100], status: 'green', speed: 38, vehicles: [], baseSpeed: 45, congestionLevel: 0 },
+      { name: 'Holy Spirit Drive', point: [14.6870, 121.0735], status: 'green', speed: 35, vehicles: [], baseSpeed: 42, congestionLevel: 0 },
+      { name: 'Bagong Silangan Road', point: [14.6755, 121.0980], status: 'amber', speed: 24, vehicles: [], baseSpeed: 33, congestionLevel: 0.25 }
     ];
     const colors = { green: '#188038', amber: '#f9ab00', red: '#d93025' };
     const labels = { green: 'Free flow', amber: 'Moderate', red: 'Heavy traffic' };
 
     let trafficMap, roadMarkers = [], startMarker = null, destinationMarker = null, routeLine = null, updateInterval = null;
     let alternativeRoutes = [], selectedRouteIndex = 0, alternativeLines = [];
+    let vehicleMarkers = [];
 
+    // Enhanced Real-time Traffic Update with Smooth Transitions
     function updateLiveTraffic() {
+      const now = Date.now();
+      trafficSystem.lastUpdateTime = now;
+      trafficSystem.updateCount++;
+
       roads.forEach((road) => {
-        const variation = (Math.random() - 0.5) * 8;
-        road.speed = Math.max(10, road.speed + variation);
-        if (road.speed > 35) road.status = 'green';
-        else if (road.speed > 25) road.status = 'amber';
-        else road.status = 'red';
+        // Simulate realistic traffic flow with momentum
+        const randomShift = (Math.random() - 0.5) * road.baseSpeed * REAL_TIME_CONFIG.trafficVolatility;
+        const targetSpeed = Math.max(10, road.baseSpeed * (1 - road.congestionLevel) + randomShift);
+        
+        // Smooth transition (momentum-based)
+        road.speed = road.speed + (targetSpeed - road.speed) * REAL_TIME_CONFIG.trafficFlowSmoothing;
+        road.speed = Math.max(8, Math.min(50, road.speed));
+
+        // Dynamic status based on current speed
+        if (road.speed > 35) {
+          road.status = 'green';
+          road.incident = null;
+        } else if (road.speed > 25) {
+          road.status = 'amber';
+        } else {
+          road.status = 'red';
+          if (!road.incident && Math.random() < 0.05) {
+            road.incident = Math.random() > 0.5 ? 'Congestion detected' : 'Slow traffic';
+          }
+        }
+
+        // Update congestion level based on speed
+        road.congestionLevel = Math.max(0, 1 - (road.speed / road.baseSpeed));
+
+        // Generate vehicle positions
+        updateRoadVehicles(road);
       });
 
       updateDashboard();
-      if (trafficMap) renderRoads();
+      if (trafficMap) {
+        renderRoads();
+        renderVehicles();
+      }
+    }
+
+    function updateRoadVehicles(road) {
+      const vehicleCount = Math.ceil(REAL_TIME_CONFIG.vehiclesPerRoad * (1 + road.congestionLevel));
+      
+      while (road.vehicles.length < vehicleCount) {
+        road.vehicles.push({
+          id: Math.random().toString(36),
+          position: Math.random(),
+          speed: road.speed
+        });
+      }
+
+      // Remove excess vehicles
+      if (road.vehicles.length > vehicleCount) {
+        road.vehicles = road.vehicles.slice(0, vehicleCount);
+      }
+
+      // Update vehicle positions
+      road.vehicles.forEach((vehicle) => {
+        vehicle.position = (vehicle.position + (road.speed / 100) * 0.03) % 1;
+        vehicle.speed = road.speed + (Math.random() - 0.5) * 5;
+      });
+    }
+
+    function renderVehicles() {
+      if (!trafficMap) return;
+
+      // Clear old vehicle markers
+      vehicleMarkers.forEach(marker => trafficMap.removeLayer(marker));
+      vehicleMarkers = [];
+
+      roads.forEach((road) => {
+        road.vehicles.forEach((vehicle) => {
+          const roadIndex = roads.indexOf(road);
+          const nextRoad = roads[(roadIndex + 1) % roads.length];
+          
+          // Interpolate position between roads
+          const lat = road.point[0] + (nextRoad.point[0] - road.point[0]) * vehicle.position;
+          const lng = road.point[1] + (nextRoad.point[1] - road.point[1]) * vehicle.position;
+
+          const marker = L.circleMarker([lat, lng], {
+            radius: 4,
+            color: colors[road.status],
+            fillColor: colors[road.status],
+            fillOpacity: 0.6,
+            weight: 1,
+            className: 'vehicle-marker'
+          }).addTo(trafficMap);
+
+          vehicleMarkers.push(marker);
+        });
+      });
     }
 
     function updateDashboard() {
@@ -356,11 +477,23 @@
       document.getElementById('greenRoadsCard').textContent = green;
       document.getElementById('amberRoadsCard').textContent = amber;
       document.getElementById('redRoadsCard').textContent = red;
-      document.getElementById('avgSpeed').textContent = (totalSpeed / roads.length).toFixed(0) + ' km/h';
+      document.getElementById('avgSpeed').textContent = (totalSpeed / roads.length).toFixed(1) + ' km/h';
       document.getElementById('congestedRoads').textContent = red;
-      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+      
+      const timeFormat = new Date().toLocaleTimeString();
+      document.getElementById('lastUpdate').textContent = timeFormat;
+      
       document.getElementById('congestionLevel').textContent = Math.round((red / roads.length) * 100) + '%';
       document.getElementById('avgWaitTime').textContent = (red * 4 + amber * 2) + ' min';
+      
+      // Update system status
+      const statusElement = document.getElementById('systemStatus');
+      if (trafficSystem.isLive) {
+        statusElement.innerHTML = '● <span style="color:#188038">Online (Live)</span>';
+      } else {
+        statusElement.innerHTML = '● <span style="color:#f9ab00">Buffering...</span>';
+      }
+
       updateAlerts();
       renderTrafficList();
     }
@@ -379,15 +512,22 @@
       alertsPanel.innerHTML = incidents.map((road) => `
         <div class="alert-item ${road.status === 'red' ? 'severe' : ''}">
           <strong>${road.name}</strong><br>
-          ${road.incident} • ${road.speed} km/h
+          ${road.incident} • ${road.speed.toFixed(0)} km/h
         </div>
       `).join('');
     }
 
     function startLiveUpdates() {
+      trafficSystem.isLive = true;
       updateLiveTraffic();
+      
       if (updateInterval) clearInterval(updateInterval);
-      updateInterval = setInterval(updateLiveTraffic, 5000);
+      updateInterval = setInterval(updateLiveTraffic, REAL_TIME_CONFIG.updateInterval);
+    }
+
+    function stopLiveUpdates() {
+      trafficSystem.isLive = false;
+      if (updateInterval) clearInterval(updateInterval);
     }
 
     function initializeMap() {
@@ -400,6 +540,7 @@
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(trafficMap);
       renderRoads();
       renderTrafficList();
+      startLiveUpdates();
     }
 
     function renderRoads() {
@@ -409,12 +550,18 @@
 
       roads.forEach((road) => {
         const marker = L.circleMarker(road.point, {
-          radius: 10,
+          radius: 12,
           color: colors[road.status],
           fillColor: colors[road.status],
           fillOpacity: 0.85,
-          weight: 2
-        }).addTo(trafficMap).bindPopup(`<strong>${road.name}</strong><br><span style="color:${colors[road.status]};font-weight:bold">${labels[road.status]}</span><br>Speed: ${road.speed.toFixed(0)} km/h`);
+          weight: 3
+        }).addTo(trafficMap).bindPopup(`
+          <strong>${road.name}</strong><br>
+          <span style="color:${colors[road.status]};font-weight:bold">${labels[road.status]}</span><br>
+          Speed: ${road.speed.toFixed(0)} km/h<br>
+          Vehicles: ${road.vehicles.length}
+          ${road.incident ? `<br><span style="color:#d93025">⚠️ ${road.incident}</span>` : ''}
+        `);
 
         roadMarkers.push({ marker, road });
       });
@@ -430,7 +577,7 @@
         card.innerHTML = `
           <div class="road-info">
             <div class="road-name">${road.name}</div>
-            <div class="road-meta"><span>${labels[road.status]}</span>${road.incident ? `<span style="color:#d93025">⚠️ ${road.incident}</span>` : ''}</div>
+            <div class="road-meta"><span>${labels[road.status]}</span><span>🚗 ${road.vehicles.length}</span>${road.incident ? `<span style="color:#d93025">⚠️ Alert</span>` : ''}</div>
           </div>
           <div class="road-speed"><div class="speed-value" style="color:${colors[road.status]}">${road.speed.toFixed(0)}</div><div class="speed-unit">km/h</div></div>
         `;
@@ -452,6 +599,19 @@
       document.getElementById('app').style.display = 'block';
       initializeMap();
       setTimeout(() => trafficMap.invalidateSize(), 100);
+    });
+
+    // Live indicator control
+    document.getElementById('liveIndicator').addEventListener('click', () => {
+      if (trafficSystem.isLive) {
+        stopLiveUpdates();
+        document.getElementById('liveIndicator').classList.remove('active');
+        document.getElementById('liveStatus').textContent = 'PAUSED';
+      } else {
+        startLiveUpdates();
+        document.getElementById('liveIndicator').classList.add('active');
+        document.getElementById('liveStatus').textContent = 'LIVE';
+      }
     });
 
     function coords(id) {
@@ -618,10 +778,9 @@
       document.getElementById('routeSummary').innerHTML = 'Choose your starting point and destination.';
     });
 
-    document.getElementById('refreshBtn').addEventListener('click', () => {
-      document.getElementById('refreshBtn').classList.add('updating');
-      updateLiveTraffic();
-      setTimeout(() => document.getElementById('refreshBtn').classList.remove('updating'), 600);
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      stopLiveUpdates();
     });
   </script>
 </body>
