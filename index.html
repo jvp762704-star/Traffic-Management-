@@ -25,11 +25,14 @@
     .error-message { display: none; background: rgba(217,48,37,0.15); border: 1px solid rgba(217,48,37,0.6); border-radius: 10px; color: #ffc9c9; padding: 10px 12px; font-size: 13px; text-align: center; }
 
     #dashboard { display: none; flex-direction: column; width: 100vw; height: 100vh; background: #f1f3f4; padding: 30px; overflow: auto; }
-    .dashboard-header { background: white; padding: 24px 28px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .dashboard-header { background: white; padding: 24px 28px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
     .dashboard-header h1 { color: #174ea6; margin-bottom: 6px; }
     .dashboard-header p { color: #666; font-size: 14px; }
-    #openMapBtn { background: #1a73e8; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
-    #openMapBtn:hover { background: #1557b0; }
+    .header-buttons { display: flex; gap: 12px; }
+    #openMapBtn, #logoutBtn { background: #1a73e8; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+    #openMapBtn:hover, #logoutBtn:hover { background: #1557b0; }
+    #logoutBtn { background: #d93025; }
+    #logoutBtn:hover { background: #b71c1c; }
 
     .dashboard-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 25px; }
     .dashboard-card { background: white; padding: 22px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden; }
@@ -112,11 +115,14 @@
     .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 6px 0; }
     .legend-color { width: 12px; height: 12px; border-radius: 50%; }
 
-    .live-indicator { position: absolute; top: 18px; right: 18px; z-index: 1000; background: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.25); cursor: pointer; transition: all 0.3s; }
+    .live-indicator { position: absolute; top: 18px; right: 18px; z-index: 1000; background: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.22); }
     .live-indicator:hover { background: #f1f3f4; }
     .live-indicator.active { animation: pulse-live 1.5s infinite; }
     @keyframes pulse-live { 0% { box-shadow: 0 0 0 0 rgba(24,128,56,0.7); } 70% { box-shadow: 0 0 0 10px rgba(24,128,56,0); } }
     .live-status { font-size: 12px; color: #999; margin-top: 8px; text-align: center; }
+
+    #dashboardBtn { position: absolute; top: 18px; right: 80px; z-index: 1000; background: white; border: none; color: #1a73e8; padding: 12px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.22); transition: all 0.3s; }
+    #dashboardBtn:hover { background: #f1f3f4; color: #1557b0; }
 
     #trafficList { position: absolute; right: 18px; top: 75px; z-index: 1000; width: 280px; max-height: 450px; overflow-y: auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.22); }
     .road-card { padding: 14px; border-bottom: 1px solid #eee; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
@@ -134,14 +140,15 @@
     @media (max-width: 800px) { 
       #dashboard { padding: 15px; } 
       .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; } 
-      #openMapBtn { width: 100%; } 
+      .header-buttons { width: 100%; flex-direction: column; }
+      #openMapBtn, #logoutBtn { width: 100%; }
       .dashboard-cards { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 700px) { 
       .search-panel { left: 10px; right: 10px; width: auto; top: 10px; } 
       .traffic-panel { right: 10px; bottom: 10px; } 
       #trafficList { display: none; } 
-      #refreshBtn { top: 75px; }
+      #dashboardBtn { top: 10px; right: 10px; padding: 10px 14px; font-size: 12px; }
     }
     @media (max-width: 500px) { 
       .dashboard-cards { grid-template-columns: 1fr; } 
@@ -182,7 +189,10 @@
         <h1>Smart Traffic Dashboard</h1>
         <p>Quezon City - Real-time Monitoring System</p>
       </div>
-      <button id="openMapBtn">View Traffic Map</button>
+      <div class="header-buttons">
+        <button id="openMapBtn">View Traffic Map</button>
+        <button id="logoutBtn">Logout</button>
+      </div>
     </div>
 
     <div class="dashboard-cards">
@@ -295,6 +305,8 @@
       </div>
     </div>
 
+    <button id="dashboardBtn">← Dashboard</button>
+
     <div class="live-indicator active" id="liveIndicator" title="Live traffic updates">
       <div>🔴</div>
     </div>
@@ -341,6 +353,16 @@
       } else {
         error.style.display = 'block';
       }
+    }
+
+    function logout() {
+      stopLiveUpdates();
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('error').style.display = 'none';
+      document.getElementById('loginPage').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('app').style.display = 'none';
     }
 
     document.getElementById('password').addEventListener('keydown', function (event) {
@@ -526,6 +548,15 @@
       document.getElementById('app').style.display = 'block';
       initializeMap();
       setTimeout(() => trafficMap.invalidateSize(), 100);
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    document.getElementById('dashboardBtn').addEventListener('click', () => {
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'flex';
+      stopLiveUpdates();
+      startLiveUpdates();
     });
 
     document.getElementById('liveIndicator').addEventListener('click', () => {
